@@ -18,7 +18,7 @@ namespace ProductManagementAPI.Services
         public TokenModel GenerateSecurityToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
+            var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -29,8 +29,8 @@ namespace ProductManagementAPI.Services
                 }),
                 Expires = DateTime.Now.AddMinutes(_jwtSettings.Expiration.GetValueOrDefault()),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _jwtSettings.Issuer,
-                Audience = _jwtSettings.Audience
+                Issuer = _jwtSettings.Issuer
+                
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return new TokenModel
